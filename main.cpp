@@ -1,5 +1,24 @@
 #include <SFML/Graphics.hpp>
 
+#include <random>
+
+namespace
+{
+    std::default_random_engine createRandomEngine()
+    {
+        auto seed = static_cast<unsigned long>(std::time(nullptr));
+        return std::default_random_engine(seed);
+    }
+
+    auto RandomEngine = createRandomEngine();
+}
+
+int randomInt(int exclusiveMax)
+{
+    std::uniform_int_distribution<> distr(0, exclusiveMax - 1);
+    return distr(RandomEngine);
+}
+
 class ParticleSystem : public sf::Drawable, public sf::Transformable
 {
     public:
@@ -56,6 +75,11 @@ class ParticleSystem : public sf::Drawable, public sf::Transformable
             mParticles[index].velocity = sf::Vector2f(std::cos(angle) * speed, std::sin(angle) * speed);
             mParticles[index].lifetime = sf::milliseconds((std::rand() % 2000) + 1000);
 
+            // color
+            sf::Color newColor(randomInt(255), randomInt(255), randomInt(255));
+            mVertices[index].color = newColor;
+
+            // position
             mVertices[index].position = mEmitter;
         }
 
@@ -68,8 +92,8 @@ class ParticleSystem : public sf::Drawable, public sf::Transformable
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(512, 256), "Particles");
-    ParticleSystem particles(1000);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Particles", sf::Style::Close);
+    ParticleSystem particles(10000);
 
     sf::Clock clock;
     while (window.isOpen())
