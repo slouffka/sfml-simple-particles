@@ -1,7 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-
-#include <vector>
 
 class ParticleSystem : public sf::Drawable, public sf::Transformable
 {
