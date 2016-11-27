@@ -26,13 +26,13 @@ class ParticleSystem : public sf::Drawable, public sf::Transformable
         : mParticles(count)
         , mVertices(sf::Points, count)
         , mLifetime(sf::seconds(3))
-        , mEmitter(0, 0)
+        , mPosition(0, 0)
         {
         }
 
-        void setEmitter(sf::Vector2f position)
+        void setPosition(sf::Vector2f position)
         {
-            mEmitter = position;
+            mPosition = position;
         }
 
         void update(sf::Time elapsed)
@@ -80,14 +80,14 @@ class ParticleSystem : public sf::Drawable, public sf::Transformable
             mVertices[index].color = newColor;
 
             // position
-            mVertices[index].position = mEmitter;
+            mVertices[index].position = mPosition;
         }
 
     private:
         std::vector<Particle>   mParticles;
         sf::VertexArray         mVertices;
         sf::Time                mLifetime;
-        sf::Vector2f            mEmitter;
+        sf::Vector2f            mPosition;
 };
 
 int main()
@@ -101,12 +101,24 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
+            // handle window events
             if (event.type == sf::Event::Closed)
+            {
                 window.close();
+            }
+
+            // handle keys pressed
+            if (event.type == sf::Event::KeyPressed)
+            {
+                if (event.key.code == sf::Keyboard::Escape) {
+                    window.close();
+                }
+            }
+
         }
 
         sf::Vector2i mouse = sf::Mouse::getPosition(window);
-        particles.setEmitter(window.mapPixelToCoords(mouse));
+        particles.setPosition(window.mapPixelToCoords(mouse));
 
         sf::Time elapsed = clock.restart();
         particles.update(elapsed);
