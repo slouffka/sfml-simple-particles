@@ -1,2 +1,2 @@
-clang++ -std=c++11 -O3 -lsfml-window -lsfml-graphics -lsfml-system -o particles \
+clang++ -std=c++11 -Os -lsfml-window -lsfml-graphics -lsfml-system -o particles \
     main.cpp
